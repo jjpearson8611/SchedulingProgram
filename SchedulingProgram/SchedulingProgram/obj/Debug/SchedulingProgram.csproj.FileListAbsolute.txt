@@ -1,0 +1,6 @@
+D:\Programming\GitDumpsHere\SchedulingProgram\SchedulingProgram\SchedulingProgram\bin\Debug\SchedulingProgram.exe.config
+D:\Programming\GitDumpsHere\SchedulingProgram\SchedulingProgram\SchedulingProgram\obj\Debug\SchedulingProgram.csprojResolveAssemblyReference.cache
+D:\Programming\GitDumpsHere\SchedulingProgram\SchedulingProgram\SchedulingProgram\bin\Debug\SchedulingProgram.exe
+D:\Programming\GitDumpsHere\SchedulingProgram\SchedulingProgram\SchedulingProgram\bin\Debug\SchedulingProgram.pdb
+D:\Programming\GitDumpsHere\SchedulingProgram\SchedulingProgram\SchedulingProgram\obj\Debug\SchedulingProgram.exe
+D:\Programming\GitDumpsHere\SchedulingProgram\SchedulingProgram\SchedulingProgram\obj\Debug\SchedulingProgram.pdb
