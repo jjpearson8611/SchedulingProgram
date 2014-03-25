@@ -129,7 +129,7 @@ namespace SchedulingProgram
         }
         public void PrintOutProcessInformation(Process x)
         {
-            Console.WriteLine("we have ended a process");
+            Console.WriteLine("YAY");
         }
 
         public void AgeProcesses()
