@@ -45,9 +45,6 @@ namespace SchedulingProgram
         public int LongestTimeInRQ { get; set; }
         public int CurrentTimeInRQ { get; set; }
 
-        //0 cpu bounded 1 equal 2 io bounded
-        public int ProcessType { get; set; }
-
         //0 ready queue 1 cpu 2 io
         public int CurrentState { get; set; }
 

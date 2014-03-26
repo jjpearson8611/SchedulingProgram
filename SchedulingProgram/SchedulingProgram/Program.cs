@@ -47,10 +47,6 @@ namespace SchedulingProgram
                 IO.TimeNeededInIO = 3;
                 IO.TimeNeededInCPU = 1;
 
-                CPU.ProcessType = 0;
-                Eql.ProcessType = 1;
-                IO.ProcessType = 2;
-
                 Temp.InsertProcesses(CPU, Eql, IO); 
             }
 

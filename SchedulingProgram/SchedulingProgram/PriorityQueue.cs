@@ -34,67 +34,27 @@ namespace SchedulingProgram
                 Console.WriteLine(Processes[i].ToString());
             }
         }
-
-        public Process GetTop(int type)
-        {
-            int i;
-
-            //find the top cpu
-            for (i = 0; i < Processes.Count; i++)
-            {
-                if (Processes[i].ProcessType == type)
-                {
-                    return Processes[i];
-                }
-            }
-            if (type == 0)
-            {
-                type = 3;
-            }
-            //this will only happen if no top cpu process has been found
-            // this will return another process if none exist
-            return GetTop(--type);
-        }
+        
         public void Simulate()
         {
             bool NotDoneYet = true;
             int WhichType = 2;
-            Process CPUWorkingProcess = new Process();
-            CPUWorkingProcess.ProcessType = -1;
-            CPUWorkingProcess.TimeNeededInCPU = -1;
             List<Process> IOQueue = new List<Process>();
             while (NotDoneYet)
             {
-                if (CPUWorkingProcess.TimeInCPU == CPUWorkingProcess.TimeNeededInCPU || CPUWorkingProcess.ProcessType == -1)
-                {
-                    if(CPUWorkingProcess != null)
-                    {
-                        IOQueue.Add(CPUWorkingProcess);
-                    }
-                    switch (WhichType)
-                    {
-                        case 1:
-                            //Console.WriteLine("Equal");
-                            CPUWorkingProcess = GetTop(WhichType);
-                            WhichType--;
-                            break;
-                        case 2:
-                            //Console.WriteLine("IO");
-                            CPUWorkingProcess = GetTop(WhichType);
-                            WhichType--;
-                            break;
 
-                        case 0:
-                            //Console.WriteLine("CPU");
-                            CPUWorkingProcess = GetTop(WhichType);
-                            WhichType = 2;
-                            break;
+                if (Processes[0].TimeInCPU == Processes[0].TimeNeededInCPU)
+                {
+                    if (Processes[0] != null)
+                    {
+                        IOQueue.Add(Processes[0]);
                     }
+                    
                 }
                 else
                 {
-                    CPUWorkingProcess.CurrentState = 1;
-                    CPUWorkingProcess.TimeInCPU++;
+                    Processes[0].CurrentState = 1;
+                    Processes[0].TimeInCPU++;
                 }
                 if (IOQueue.Count != 0)
                 {
@@ -109,7 +69,7 @@ namespace SchedulingProgram
                             Processes.Remove(IOQueue[0]);
                             PrintOutProcessInformation(IOQueue[0]);
                             IOQueue.Remove(IOQueue[0]);
-
+                            Processes.Sort();
                         }
                     }
                     else
@@ -129,7 +89,15 @@ namespace SchedulingProgram
         }
         public void PrintOutProcessInformation(Process x)
         {
-            Console.WriteLine("YAY");
+            Console.WriteLine("Process Number: " + x.Name);
+            Console.WriteLine("Starting Priority: " + x.StartingPriority);
+            Console.WriteLine("Current Priority: " + x.CurrentPriority);
+            Console.WriteLine("Completed: " + x.TotalCyclesCompleted);
+            Console.WriteLine("Total In CPU: " + x.TotalTimeInCPU);
+            Console.WriteLine("Total In IO: " + x.TotalTimeInIO);
+            Console.WriteLine("Total in Ready Queue: " + x.TotalTImeInRQ);
+            Console.WriteLine("Smallest In Ready Queue: " + x.SmallestTimeInRQ);
+            Console.WriteLine("Longest In Ready Queue: " + x.LongestTimeInRQ);
         }
 
         public void AgeProcesses()
@@ -162,6 +130,18 @@ namespace SchedulingProgram
                 }
             }
 
+        }
+
+        public void Insertion(Process temp)
+        {
+            int numbers;
+            for (numbers = 0; numbers < Processes.Count; numbers++)
+            {
+                if (Processes[numbers].CurrentPriority < temp.CurrentPriority)
+                {
+                    Processes.Insert(numbers, temp);
+                }
+            }
         }
     }
 }
