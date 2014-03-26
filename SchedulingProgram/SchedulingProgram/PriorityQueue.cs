@@ -10,7 +10,10 @@ namespace SchedulingProgram
     class PriorityQueue
     {
         private List<Process> Processes = new List<Process>();
+        private List<Process> FinishedProcesses = new List<Process>();
+        Graph OutputGraph = new Graph();
 
+        int temp = 0;
         public PriorityQueue(){ }
 
 
@@ -38,38 +41,69 @@ namespace SchedulingProgram
         public void Simulate()
         {
             bool NotDoneYet = true;
-            int WhichType = 2;
             List<Process> IOQueue = new List<Process>();
             while (NotDoneYet)
             {
-
-                if (Processes[0].TimeInCPU == Processes[0].TimeNeededInCPU)
+                //All of the processes are in the io queue
+                if (Processes.Count != 0)
                 {
-                    if (Processes[0] != null)
+                    //the current process is done runninng
+                    if (Processes[0].TimeInCPU == Processes[0].TimeNeededInCPU)
                     {
-                        IOQueue.Add(Processes[0]);
+                            //put it in the io queue to get io and remove it from the process
+                            //queue till later
+                            IOQueue.Add(Processes[0]);
+                            Processes.Remove(Processes[0]);
                     }
-                    
+                    else
+                    {
+                        //we are about to reset the counter because we are in the cpu now
+                        //check longest and shortest times then restart current time in rq
+                        if (Processes[0].CurrentTimeInRQ > Processes[0].LongestTimeInRQ)
+                        {
+                            Processes[0].LongestTimeInRQ = Processes[0].CurrentTimeInRQ;
+                        }
+                        if (Processes[0].CurrentTimeInRQ < Processes[0].SmallestTimeInRQ)
+                        {
+                            Processes[0].SmallestTimeInRQ = Processes[0].CurrentTimeInRQ;
+                        }
+                        Processes[0].CurrentTimeInRQ = 0;
+
+                        //current state is 1 because we are in the cpu
+                        Processes[0].CurrentState = 1;
+
+                        //increase the time that it has been in the cpu
+                        Processes[0].TimeInCPU++;
+                    }
                 }
-                else
-                {
-                    Processes[0].CurrentState = 1;
-                    Processes[0].TimeInCPU++;
-                }
+
+                //all the processes are in the priority cpu queue
                 if (IOQueue.Count != 0)
                 {
+                    
+                    //if it has gotten all of its IO time done
                     if (IOQueue[0].TimeInIO == IOQueue[0].TimeNeededInIO)
                     {
+
+                        //Set the state to ready queue and increase the number of cycles completed
                         IOQueue[0].CurrentState = 0;
                         IOQueue[0].TotalCyclesCompleted++;
 
+                        //if all the cycles are complete remove the process and log its values
                         if (IOQueue[0].TotalCyclesCompleted == IOQueue[0].TotalCyclesNeeded)
                         {
-                            Console.WriteLine("one has been removed");
-                            Processes.Remove(IOQueue[0]);
+                            //print out the process information and log the information
                             PrintOutProcessInformation(IOQueue[0]);
+
+                            //remove the process from the io queue
                             IOQueue.Remove(IOQueue[0]);
-                            Processes.Sort();
+                        }
+                        else
+                        {
+                            //Console.WriteLine("moving from" + IOQueue[0].Name + " io back to cpu");
+                            IOQueue[0].TimeInIO = 0;
+                            Processes.Add(IOQueue[0]);
+                            IOQueue.Remove(IOQueue[0]);
                         }
                     }
                     else
@@ -79,25 +113,33 @@ namespace SchedulingProgram
                     }
                 }
 
+                //we need to age the processes and increase priorities accordingly
                 AgeProcesses();
-                if (Processes.Count == 0)
+
+                //we are all done with all the processes so lets end it
+                if (Processes.Count == 0 && IOQueue.Count == 0)
                 {
                     NotDoneYet = false;
-                    Console.WriteLine("we made it");
+                    Console.WriteLine("All Processes Have Been Eliminated");
                 }
             }
+
+            Console.WriteLine(FinishedProcesses.Count.ToString());
+            OutputGraph.TakeProcesses(FinishedProcesses.ToArray());
         }
         public void PrintOutProcessInformation(Process x)
         {
-            Console.WriteLine("Process Number: " + x.Name);
-            Console.WriteLine("Starting Priority: " + x.StartingPriority);
-            Console.WriteLine("Current Priority: " + x.CurrentPriority);
-            Console.WriteLine("Completed: " + x.TotalCyclesCompleted);
-            Console.WriteLine("Total In CPU: " + x.TotalTimeInCPU);
-            Console.WriteLine("Total In IO: " + x.TotalTimeInIO);
-            Console.WriteLine("Total in Ready Queue: " + x.TotalTImeInRQ);
-            Console.WriteLine("Smallest In Ready Queue: " + x.SmallestTimeInRQ);
-            Console.WriteLine("Longest In Ready Queue: " + x.LongestTimeInRQ);
+            temp++;
+            Console.WriteLine("Process Number: " + x.Name + "number printed" + temp.ToString());
+            FinishedProcesses.Add(x);
+            //Console.WriteLine("Starting Priority: " + x.StartingPriority);
+            //Console.WriteLine("Current Priority: " + x.CurrentPriority);
+            //Console.WriteLine("Total Cycles Completed: " + x.TotalCyclesCompleted);
+            //Console.WriteLine("Total In CPU: " + x.TotalTimeInCPU);
+            //Console.WriteLine("Total In IO: " + x.TotalTimeInIO);
+            //Console.WriteLine("Total in Ready Queue: " + x.TotalTImeInRQ);
+            //Console.WriteLine("Smallest In Ready Queue: " + x.SmallestTimeInRQ);
+            //Console.WriteLine("Longest In Ready Queue: " + x.LongestTimeInRQ);
         }
 
         public void AgeProcesses()
@@ -110,14 +152,9 @@ namespace SchedulingProgram
                 {
                     Processes[i].TotalTImeInRQ++;
                     Processes[i].CurrentTimeInRQ++;
-                    Processes[i].CurrentPriority++;
-                    if (Processes[i].CurrentTimeInRQ > Processes[i].LongestTimeInRQ)
+                    if (Processes[i].CurrentPriority < 15)
                     {
-                        Processes[i].LongestTimeInRQ = Processes[i].CurrentTimeInRQ;
-                    }
-                    if (Processes[i].CurrentTimeInRQ < Processes[i].SmallestTimeInRQ)
-                    {
-                        Processes[i].SmallestTimeInRQ = Processes[i].CurrentTimeInRQ;
+                        Processes[i].CurrentPriority++;
                     }
                 }
                 else if (Processes[i].CurrentState == 1)

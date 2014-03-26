@@ -47,6 +47,10 @@ namespace SchedulingProgram
                 IO.TimeNeededInIO = 3;
                 IO.TimeNeededInCPU = 1;
 
+                CPU.TotalCyclesNeeded = 3;
+                IO.TotalCyclesNeeded = 3;
+                Eql.TotalCyclesNeeded = 3;
+
                 Temp.InsertProcesses(CPU, Eql, IO); 
             }
 
