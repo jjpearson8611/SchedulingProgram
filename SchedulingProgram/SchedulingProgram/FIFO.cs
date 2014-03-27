@@ -10,6 +10,7 @@ namespace SchedulingProgram
     class FIFO : ScheduleClass
     {
         private List<Process> Processes = new List<Process>();
+        private List<Process> IncomingProcesses = new List<Process>();
         private List<Process> FinishedProcesses = new List<Process>();
         Graph OutputGraph = new Graph();
 
@@ -19,14 +20,14 @@ namespace SchedulingProgram
 
         public void InsertProcesses(Process CPU, Process Eql, Process IO)
         {
-            Processes.Add(CPU);
-            Processes.Add(Eql);
-            Processes.Add(IO);
+            IncomingProcesses.Add(CPU);
+            IncomingProcesses.Add(Eql);
+            IncomingProcesses.Add(IO);
         }
 
         public void SortLists()
         {
-            Processes.Sort();
+            Processes.Sort(); 
         }
         public void PrintOutProcesses()
         {
@@ -38,14 +39,22 @@ namespace SchedulingProgram
             }
         }
 
+        public void AddAnotherProcess()
+        {
+            if (IncomingProcesses.Count != 0)
+            {
+                Processes.Add(IncomingProcesses[0]);
+                IncomingProcesses.Remove(IncomingProcesses[0]);
+            }
+        }
+
         public List<Process> Simulate()
         {
             bool NotDoneYet = true;
             List<Process> IOQueue = new List<Process>();
-            bool ProcessDone = false;
-            int NumberOfCycles = 0;
             while (NotDoneYet)
             {
+                AddAnotherProcess();
                 if (Processes.Count != 0)
                 {
                     //the current process is done runninng
@@ -66,7 +75,6 @@ namespace SchedulingProgram
                         Processes[0].CurrentState = 2;
                         IOQueue.Add(Processes[0]);
                         Processes.Remove(Processes[0]);
-                        NumberOfCycles = 0;
                     }
                     else
                     {

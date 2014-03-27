@@ -10,23 +10,31 @@ namespace SchedulingProgram
     class PriorityQueue : ScheduleClass
     {
         private List<Process> Processes = new List<Process>();
+        private List<Process> IncomingProcesses = new List<Process>();
         private List<Process> FinishedProcesses = new List<Process>();
         Graph OutputGraph = new Graph();
-
-        int temp = 0;
         public PriorityQueue(){ }
 
 
         public void InsertProcesses(Process CPU, Process Eql, Process IO)
         {
-            Processes.Add(CPU);
-            Processes.Add(Eql);
-            Processes.Add(IO);
+            IncomingProcesses.Add(CPU);
+            IncomingProcesses.Add(Eql);
+            IncomingProcesses.Add(IO);
         }
 
         public void SortLists()
         {
             Processes.Sort();
+        }
+
+        public void AddAnotherProcess()
+        {
+            if (IncomingProcesses.Count != 0)
+            {
+                Insertion(IncomingProcesses[0]);
+                IncomingProcesses.Remove(IncomingProcesses[0]);
+            }
         }
         
         public List<Process> Simulate()
@@ -34,8 +42,11 @@ namespace SchedulingProgram
             bool NotDoneYet = true;
             List<Process> IOQueue = new List<Process>();
             int NumberOfCycles = 0;
+            AddAnotherProcess();
             while (NotDoneYet)
             {
+                //add the processes to the ready queue one at a time
+                AddAnotherProcess();
                 //timer to stop over consumption of cycles
                 if (NumberOfCycles == 5)
                 {

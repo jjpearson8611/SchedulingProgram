@@ -11,5 +11,6 @@ namespace SchedulingProgram
         void SortLists();
         void InsertProcesses(Process CPU, Process Eql, Process IO);
         List<Process> Simulate();
+        void AddAnotherProcess();
     }
 }
