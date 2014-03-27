@@ -2,19 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Collections;
 using System.Threading.Tasks;
 
 namespace SchedulingProgram
 {
-    class PriorityQueue : ScheduleClass
+    class RoundRobin: ScheduleClass
     {
         private List<Process> Processes = new List<Process>();
         private List<Process> FinishedProcesses = new List<Process>();
         Graph OutputGraph = new Graph();
 
-        int temp = 0;
-        public PriorityQueue(){ }
+        public RoundRobin(){ }
 
 
         public void InsertProcesses(Process CPU, Process Eql, Process IO)
@@ -61,7 +59,7 @@ namespace SchedulingProgram
 
                     //remove and reinsert the process
                     Processes.Remove(ProcessSwap);
-                    Insertion(ProcessSwap);
+                    Processes.Add(ProcessSwap);
                 }
                 else
                 {
@@ -122,9 +120,8 @@ namespace SchedulingProgram
                             }
                             else
                             {
-                                //Console.WriteLine("moving from" + IOQueue[0].Name + " io back to cpu");
                                 IOQueue[0].TimeInIO = 0;
-                                Insertion(IOQueue[0]);
+                                Processes.Add(IOQueue[0]);
                                 IOQueue.Remove(IOQueue[0]);
                             }
                         }
@@ -163,10 +160,6 @@ namespace SchedulingProgram
                 {
                     Processes[i].TotalTImeInRQ++;
                     Processes[i].CurrentTimeInRQ++;
-                    if (Processes[i].CurrentPriority < 15)
-                    {
-                        Processes[i].CurrentPriority++;
-                    }
                 }
                 else if (Processes[i].CurrentState == 1)
                 {
@@ -178,27 +171,6 @@ namespace SchedulingProgram
                 }
             }
 
-        }
-
-        public void Insertion(Process temp)
-        {
-            int numbers;
-
-            //do a stable insert of the processs
-            for (numbers = 0; numbers < Processes.Count; numbers++)
-            {
-                if (Processes[numbers].CurrentPriority < temp.CurrentPriority)
-                {
-                    Processes.Insert(numbers, temp);
-                    numbers = int.MaxValue - 1;
-                }
-            }
-
-            //it is actually the smallest so put it at the end
-            if (numbers < 1000)
-            {
-                Processes.Add(temp);
-            }
         }
     }
 }
