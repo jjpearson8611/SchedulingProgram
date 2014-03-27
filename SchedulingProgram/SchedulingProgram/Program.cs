@@ -24,7 +24,7 @@ namespace SchedulingProgram
             Process CPU;
             Process Eql;
             Process IO;
-            for (i = 0; i <= 15; i++)
+            for (i = 0; i <= 16; i++)
             {
                 CPU = new Process();
                 Eql = new Process();

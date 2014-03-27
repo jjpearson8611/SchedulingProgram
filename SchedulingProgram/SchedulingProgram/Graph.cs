@@ -13,11 +13,25 @@ namespace SchedulingProgram
         {
             List<int> numbers = new List<int>();
 
-            for(int i = 0; i < Processes.Length; i++)
+            for (int i = 0; i < Processes.Length; i++)
+            {
+                numbers.Add(Processes[i].LongestTimeInRQ);
+            }
+            CreateGraph(numbers.ToArray());
+
+            numbers.RemoveRange(0, numbers.Count);
+            for (int i = 0; i < Processes.Length; i++)
             {
                 numbers.Add(Processes[i].TotalTImeInRQ);
             }
 
+            CreateGraph(numbers.ToArray());
+
+            numbers.RemoveRange(0, numbers.Count);
+            for (int i = 0; i < Processes.Length; i++)
+            {
+                numbers.Add(Processes[i].SmallestTimeInRQ);
+            }
             CreateGraph(numbers.ToArray());
         }
         public void CreateGraph(int[] numbers)
@@ -42,6 +56,7 @@ namespace SchedulingProgram
                 Console.Write(" " + i.ToString() + " " + numbers[i].ToString());
                 Console.WriteLine();
             }
+            Console.WriteLine();
         }
     }
 }

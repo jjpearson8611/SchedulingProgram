@@ -52,13 +52,6 @@ namespace SchedulingProgram
                     {
                             //put it in the io queue to get io and remove it from the process
                             //queue till later
-                            IOQueue.Add(Processes[0]);
-                            Processes.Remove(Processes[0]);
-                    }
-                    else
-                    {
-                        //we are about to reset the counter because we are in the cpu now
-                        //check longest and shortest times then restart current time in rq
                         if (Processes[0].CurrentTimeInRQ > Processes[0].LongestTimeInRQ)
                         {
                             Processes[0].LongestTimeInRQ = Processes[0].CurrentTimeInRQ;
@@ -68,6 +61,14 @@ namespace SchedulingProgram
                             Processes[0].SmallestTimeInRQ = Processes[0].CurrentTimeInRQ;
                         }
                         Processes[0].CurrentTimeInRQ = 0;
+                            IOQueue.Add(Processes[0]);
+                            Processes.Remove(Processes[0]);
+                    }
+                    else
+                    {
+                        //we are about to reset the counter because we are in the cpu now
+                        //check longest and shortest times then restart current time in rq
+                       
 
                         //current state is 1 because we are in the cpu
                         Processes[0].CurrentState = 1;
@@ -102,8 +103,9 @@ namespace SchedulingProgram
                         {
                             //Console.WriteLine("moving from" + IOQueue[0].Name + " io back to cpu");
                             IOQueue[0].TimeInIO = 0;
-                            Processes.Add(IOQueue[0]);
+                            Insertion(IOQueue[0]);
                             IOQueue.Remove(IOQueue[0]);
+                            int temp = Processes.Count;
                         }
                     }
                     else
@@ -172,12 +174,21 @@ namespace SchedulingProgram
         public void Insertion(Process temp)
         {
             int numbers;
+
+            //do a stable insert of the processs
             for (numbers = 0; numbers < Processes.Count; numbers++)
             {
                 if (Processes[numbers].CurrentPriority < temp.CurrentPriority)
                 {
                     Processes.Insert(numbers, temp);
+                    numbers = int.MaxValue - 1;
                 }
+            }
+
+            //it is actually the smallest so put it at the end
+            if (numbers < 1000)
+            {
+                Processes.Add(temp);
             }
         }
     }
