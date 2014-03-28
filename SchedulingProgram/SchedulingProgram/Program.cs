@@ -10,7 +10,20 @@ namespace SchedulingProgram
     {
         static void Main(string[] args)
         {
-            /* Program Explaination and talking about methods
+            /* For the CPU bound processes time needed is
+             *              CPU = 5 - 8
+             *              IO  = 3 - 4
+             *              
+             * For the Equal processes time needed is
+             *              CPU = 3 - 5
+             *              IO  = 3 - 5
+             *              
+             * For the IO bound processes time needed is
+             *              CPU = 3 - 4
+             *              IO  = 5 - 8
+             * 
+             * 
+             * Program Explaination and talking about methods
              * The first required method is the priority queue with aging.
              *      Processes are stored in an ordered list, as the different processes
              *      are cycled through the program they have 5 cycles in the cpu before they
@@ -36,19 +49,28 @@ namespace SchedulingProgram
              *      processes being able to run first
              *Source: http://en.wikipedia.org/wiki/Round-robin_scheduling      
              *
+             * The fourth method is a lottery method with added weighting. 
+             *      Typically the lottery method just randomly selects a process and excecutes it
+             *      I changed this a little bit to be based on its priority it gets entered 1 extra time per 
+             *      priority and they can also age to help avoid starvation. once a process has been selected
+             *      then the priority is reset  
+             * Source:http://en.wikipedia.org/wiki/Lottery_scheduling
              */
             //different methods and process generation for each
             PriorityQueue RequiredMethod = new PriorityQueue();
             FIFO SimpleMethod = new FIFO();
             RoundRobin RRQueue = new RoundRobin();
+            Lottery LotteryScheduling = new Lottery();
             GenerateProcesses(SimpleMethod);
             GenerateProcesses(RequiredMethod);
             GenerateProcesses(RRQueue);
+            GenerateProcesses(LotteryScheduling);
 
             List<Process> PriorityQueue = new List<Process>();
             List<Process> NormalQueue = new List<Process>();
             List<Process> RoundRobinQueue = new List<Process>();
-            //we will now simulate
+            List<Process> LotteryMethod = new List<Process>();
+            ////we will now simulate
             Console.WriteLine("Doing the Required Priority Queue With Aging");
             PriorityQueue = RequiredMethod.Simulate();
             Console.ReadLine();
@@ -59,6 +81,13 @@ namespace SchedulingProgram
             Console.WriteLine("\nDoing The Round Robin Method");
             Console.ReadLine();
             RoundRobinQueue = RRQueue.Simulate();
+            Console.ReadLine();
+            Console.WriteLine("\nDoing The Lottery Method");
+            Console.ReadLine();
+            LotteryMethod = LotteryScheduling.Simulate();
+            Console.ReadLine();
+            Graph grapher = new Graph();
+
         }
 
 
@@ -69,7 +98,7 @@ namespace SchedulingProgram
             Process Eql;
             Process IO;
             Random rand = new Random();
-            for (i = 0; i <= 1; i++)
+            for (i = 0; i <= 15; i++)
             {
                 CPU = new Process();
                 Eql = new Process();

@@ -43,7 +43,7 @@ namespace SchedulingProgram
             AddAnotherProcess();
             Random rand = new Random();
             int NumberOfCycles = 0;
-            int next = rand.Next(0, Processes.Count);
+            int next = Next();
             while (NotDoneYet)
             {
                 AddAnotherProcess();
@@ -100,7 +100,7 @@ namespace SchedulingProgram
                             Processes[next].CurrentState = 2;
                             IOQueue.Add(Processes[next]);
                             Processes.Remove(Processes[next]);
-                            next = rand.Next(0, Processes.Count);
+                            next = Next();
                             NumberOfCycles = 0;
                         }
                         else
@@ -196,37 +196,27 @@ namespace SchedulingProgram
         }
         public int Next()
         {
-            int i; int j;
+            int i; 
+            int j;
             List<Process> tempList = new List<Process>();
             Random rand = new Random();
 
-            for (i = 0; i < Processes.Count; i++)
+            if (Processes.Count > 1)
             {
-                for (j = 0; j < Processes[i].CurrentPriority; j++)
+                for (i = 0; i < Processes.Count; i++)
                 {
-                    tempList.Add(Processes[i]);
+                    for (j = 0; j < Processes[i].CurrentPriority; j++)
+                    {
+                        tempList.Add(Processes[i]);
+                    }
                 }
+                int temp = rand.Next(0, tempList.Count -1);
+                temp = Processes.IndexOf(tempList[temp]);
+                return temp;
             }
-            return Processes.IndexOf(Processes[rand.Next(0,tempList.Count)]);
-        }
-        public void Insertion(Process temp)
-        {
-            int numbers;
-
-            //do a stable insert of the processs
-            for (numbers = 0; numbers < Processes.Count; numbers++)
+            else
             {
-                if (Processes[numbers].CurrentPriority < temp.CurrentPriority)
-                {
-                    Processes.Insert(numbers, temp);
-                    numbers = int.MaxValue - 1;
-                }
-            }
-
-            //it is actually the smallest so put it at the end
-            if (numbers < 1000)
-            {
-                Processes.Add(temp);
+                return 0;
             }
         }
     }

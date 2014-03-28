@@ -13,11 +13,10 @@ namespace SchedulingProgram
         private List<Process> IncomingProcesses = new List<Process>();
         private List<Process> FinishedProcesses = new List<Process>();
         Graph OutputGraph = new Graph();
-
-        int temp = 0;
         public FIFO() { }
 
 
+        //adds some processes into the incoming processes
         public void InsertProcesses(Process CPU, Process Eql, Process IO)
         {
             IncomingProcesses.Add(CPU);
@@ -27,18 +26,10 @@ namespace SchedulingProgram
 
         public void SortLists()
         {
-            Processes.Sort(); 
-        }
-        public void PrintOutProcesses()
-        {
-            int i;
-            Console.WriteLine("CPU Bound Processes");
-            for (i = 0; i < Processes.Count; i++)
-            {
-                Console.WriteLine(Processes[i].ToString());
-            }
+            Processes.Sort();
         }
 
+        //Inserts a process if there are any incoming left
         public void AddAnotherProcess()
         {
             if (IncomingProcesses.Count != 0)
